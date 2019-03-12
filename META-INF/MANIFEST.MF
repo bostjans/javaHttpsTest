@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Implementation-Vendor: stupica.com
+Implementation-Title: com.stupica.exporter
+Specification-Vendor:  stupica.com
+Specification-Title: stupica.com exporter
+Main-Class: com.stupica.prog.MainRun
