@@ -137,6 +137,7 @@ public class MainRun {
     private static void print_usage() {
         System.err.println("Usage: prog [-h,--help]");
         System.err.println("            [-q,--quiet]");
+        System.err.println("            [-u,--url]URL(https://..)");
     }
 
 
