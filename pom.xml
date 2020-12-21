@@ -27,7 +27,7 @@
             <!-- coordinates of the required library -->
             <groupId>com.stupica.base</groupId>
             <artifactId>globalVar</artifactId>
-            <version>1.4.2</version>
+            <version>1.4.5</version>
         </dependency>
 
         <dependency>
@@ -62,15 +62,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.2</version>
                 <configuration>
                     <archive>
-                        <manifestFile>META-INF/MANIFEST.MF</manifestFile>
-                        <manifestEntries>
-                            <Implementation-Version>${project.version}</Implementation-Version>
-                            <Specification-Version>${project.version}</Specification-Version>
-                        </manifestEntries>
                         <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>com.stupica.prog.MainRun</mainClass>
@@ -82,7 +79,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.1</version>
                 <configuration>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -104,9 +101,34 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--
+            https://github.com/fvarrui/JavaPackager
+            <plugin>
+                <groupId>io.github.fvarrui</groupId>
+                <artifactId>javapackager</artifactId>
+                <version>1.4.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>package</goal>
+                        </goals>
+                        <configuration>
+                            <!- - mandatory - ->
+                            <mainClass>com.stupica.prog.MainRun</mainClass>
+                            <!- - optional - ->
+                            <bundleJre>false</bundleJre>
+                            <generateInstaller>false</generateInstaller>
+                            <administratorRequired>false</administratorRequired>
+                            <platform>mac</platform>
+                            <macConfig></macConfig>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
         </plugins>
-        <!--
-        -->
     </build>
 
     <!--

@@ -4,6 +4,7 @@ package com.stupica.prog;
 import com.stupica.ConstGlobal;
 import com.stupica.GlobalVar;
 
+import com.stupica.core.UtilString;
 import jargs.gnu.CmdLineParser;
 
 import javax.net.ssl.*;
@@ -56,7 +57,7 @@ public class MainRun {
         GlobalVar.getInstance().sVersionMax = "0";
         GlobalVar.getInstance().sVersionMin = "1";
         GlobalVar.getInstance().sVersionPatch = "0";
-        GlobalVar.getInstance().sVersionBuild = "11";
+        GlobalVar.getInstance().sVersionBuild = "15";
         GlobalVar.getInstance().sAuthor = "stupica.com - Bostjan Stupica";
 
         // Generate main program class
@@ -155,7 +156,13 @@ public class MainRun {
 
         // Initialization
         iResult = ConstGlobal.RETURN_SUCCESS;
-        System.out.println("Checking URL: " + sUrl);
+
+        if (UtilString.isEmptyTrim(sUrl)) {
+            System.out.println("URL not provided!");
+            return iResult;
+        } else {
+            System.out.println("Checking URL: " + sUrl);
+        }
 
         try {
             objUrl = new URL(sUrl);
