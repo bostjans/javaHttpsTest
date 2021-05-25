@@ -15,6 +15,7 @@ target
 .mtj.tmp/
 
 # Package Files #
+dependency-reduced-pom.xml
 *.jar
 *.war
 *.nar

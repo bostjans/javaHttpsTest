@@ -2,9 +2,7 @@
     <!-- model version is always 4.0.0 for Maven 2.x POMs -->
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- project coordinates, i.e. a group of values which
-         uniquely identify this project -->
-
+    <!-- project coordinates, i.e. a group of values which uniquely identify this project -->
     <groupId>com.stupica.prog</groupId>
     <artifactId>httpsTest</artifactId>
     <version>1.0.0</version>
@@ -21,13 +19,12 @@
     </prerequisites>
 
     <!-- library dependencies -->
-
     <dependencies>
         <dependency>
             <!-- coordinates of the required library -->
             <groupId>com.stupica.base</groupId>
             <artifactId>globalVar</artifactId>
-            <version>1.4.5</version>
+            <version>[1.4,2)</version>
         </dependency>
 
         <dependency>
@@ -62,7 +59,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -78,22 +75,42 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!--
+                            <finalName>${project.name}-shade</finalName>
+                            -->
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.stupica.prog.MainRun</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.3.0</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <mainClass>com.stupica.prog.MainRun</mainClass>
-                        </manifest>
-                    </archive>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <finalName>${project.name}</finalName>
+                    <descriptors>
+                        <descriptor>${basedir}/src/main/assembly/packZip.xml</descriptor>
+                    </descriptors>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>create-archive</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -101,7 +118,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!--
             https://github.com/fvarrui/JavaPackager
             <plugin>
