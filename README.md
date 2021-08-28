@@ -5,7 +5,7 @@ HTTPs tester .. for Java JVM.
 ## Usage
 
 ```
-java -jar target/httpsTest-1.0.0-jar-with-dependencies.jar -h
+java -jar target/httpsTest-1.0.0.jar -h
 Usage: prog [-h,--help]
             [-q,--quiet]
             [-u,--url]URL(https://..)
@@ -13,13 +13,13 @@ Usage: prog [-h,--help]
 
 .. and to actually connect somewhere:
 ```
-java -jar target/httpsTest-1.0.0-jar-with-dependencies.jar -u https://www.dev404.net
+java -jar target/httpsTest-1.0.0.jar -u https://www.dev404.net
 ```
 
 ```
 Program: httpsTester
 Version: 0.*
-Made by: stupica.com - Bostjan Stupica
+Made by: Dev404
 ===
 Jul 06, 2019 9:57:29 PM com.stupica.prog.MainRun main
 INFO: main(): Program is starting ..

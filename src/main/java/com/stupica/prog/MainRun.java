@@ -7,6 +7,7 @@ import com.stupica.GlobalVar;
 import com.stupica.core.UtilString;
 import jargs.gnu.CmdLineParser;
 
+import java.net.HttpURLConnection;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.MalformedURLException;
@@ -38,8 +39,6 @@ public class MainRun {
 
     private static Logger logger = Logger.getLogger(MainRun.class.getName());
 
-    //private SimpleDateFormat objDateFormat01 = new SimpleDateFormat(sDtFormat);
-
 
     /**
      * @param a_args    ..
@@ -55,10 +54,9 @@ public class MainRun {
         i_return = ConstGlobal.PROCESS_EXIT_SUCCESS;
         GlobalVar.getInstance().sProgName = "httpsTester";
         GlobalVar.getInstance().sVersionMax = "0";
-        GlobalVar.getInstance().sVersionMin = "1";
+        GlobalVar.getInstance().sVersionMin = "2";
         GlobalVar.getInstance().sVersionPatch = "0";
-        GlobalVar.getInstance().sVersionBuild = "15";
-        GlobalVar.getInstance().sAuthor = "stupica.com - Bostjan Stupica";
+        GlobalVar.getInstance().sVersionBuild = "16";
 
         // Generate main program class
         objInstance = new MainRun();
@@ -129,9 +127,6 @@ public class MainRun {
         // Return
         if (i_return != ConstGlobal.PROCESS_EXIT_SUCCESS)
             System.exit(i_return);
-        else
-            //System.exit(GlobalVar.getInstance().EXIT_SUCCESS);
-            return;
     }
 
 
@@ -181,16 +176,18 @@ public class MainRun {
         //
         // Check previous step
         if (iResult == ConstGlobal.RETURN_OK) {
-            try {
-                // Run ..
-                iResult = testSsl(objUrl);
-                // Error
-                if (iResult != ConstGlobal.RETURN_OK) {
+            if (objUrl.getDefaultPort() == 443) {
+                try {
+                    // Run ..
+                    iResult = testSsl(objUrl);
+                    // Error
+                    if (iResult != ConstGlobal.RETURN_OK) {
+                        logger.severe("run(): Error at testSsl() operation!");
+                    }
+                } catch(Exception ex) {
+                    iResult = ConstGlobal.RETURN_ERROR;
                     logger.severe("run(): Error at testSsl() operation!");
                 }
-            } catch(Exception ex) {
-                iResult = ConstGlobal.RETURN_ERROR;
-                logger.severe("run(): Error at testSsl() operation!");
             }
         }
         // Do ..
@@ -254,20 +251,27 @@ public class MainRun {
 
     private int testHttp(URL aobjUrl) {
         // Local variables
-        int     iResult;
+        int                 iResult;
+        HttpsURLConnection  conHttps = null;
+        HttpURLConnection   conHttp = null;
 
         // Initialization
         iResult = ConstGlobal.RETURN_SUCCESS;
         System.out.println("\t.. test HTTP -> .. ");
 
         try {
-            HttpsURLConnection con = (HttpsURLConnection)aobjUrl.openConnection();
+            if (aobjUrl.getDefaultPort() == 443) {
+                conHttps = (HttpsURLConnection)aobjUrl.openConnection();
+                conHttp = conHttps;
+            } else
+                conHttp = (HttpURLConnection)aobjUrl.openConnection();
 
-            //dumpl all cert info
-            print_https_cert(con);
-
-            //dump all the content
-            print_content(con);
+            if (conHttps != null) {
+                // .. dump all cert info
+                print_https_cert(conHttps);
+            }
+            // .. dump all the content
+            print_content(conHttp);
         } catch (MalformedURLException e) {
             iResult = ConstGlobal.RETURN_ERROR;
             e.printStackTrace();
@@ -280,8 +284,7 @@ public class MainRun {
 
 
     private void print_https_cert(HttpsURLConnection con) {
-        if (con!=null) {
-
+        if (con != null) {
             try {
                 System.out.println("Response Code       : " + con.getResponseCode());
                 System.out.println("Cipher Suite        : " + con.getCipherSuite());
@@ -313,14 +316,13 @@ public class MainRun {
         }
     }
 
-    private void print_content(HttpsURLConnection con) {
+    private void print_content(HttpURLConnection con) {
         String input;
 
-        if (con!=null) {
+        if (con != null) {
             try {
                 System.out.println("****** Content of the URL ********");
-                BufferedReader br =
-                        new BufferedReader(
+                BufferedReader br = new BufferedReader(
                                 new InputStreamReader(con.getInputStream()));
 
                 while ((input = br.readLine()) != null) {
