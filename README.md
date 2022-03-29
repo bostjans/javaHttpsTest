@@ -50,3 +50,8 @@ Cert Public Key Format      : X.509
 
 + the it comes the Content ..
 ```
+
+
+## Ref.
+
+* https://mkyong.com/java/java-https-client-httpsurlconnection-example/

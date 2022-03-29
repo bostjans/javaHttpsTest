@@ -56,7 +56,7 @@ public class MainRun {
         GlobalVar.getInstance().sVersionMax = "0";
         GlobalVar.getInstance().sVersionMin = "2";
         GlobalVar.getInstance().sVersionPatch = "0";
-        GlobalVar.getInstance().sVersionBuild = "16";
+        GlobalVar.getInstance().sVersionBuild = "17";
 
         // Generate main program class
         objInstance = new MainRun();

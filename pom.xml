@@ -15,7 +15,7 @@
     <url>http://developer.stupica.com/maven</url>
 
     <prerequisites>
-        <maven>3.0.5</maven>
+        <maven>3.2.5</maven>
     </prerequisites>
 
     <properties>
