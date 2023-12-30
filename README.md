@@ -1,11 +1,12 @@
 # javaHttpsTest
+
 HTTPs tester .. for Java JVM.
 
 
 ## Usage
 
 ```
-java -jar target/httpsTest-1.0.0.jar -h
+java -jar target/httpsTest-1.1.0.jar -h
 Usage: prog [-h,--help]
             [-q,--quiet]
             [-u,--url]URL(https://..)
@@ -13,7 +14,7 @@ Usage: prog [-h,--help]
 
 .. and to actually connect somewhere:
 ```
-java -jar target/httpsTest-1.0.0.jar -u https://www.dev404.net
+java -jar target/httpsTest-1.1.0.jar -u https://www.dev404.net
 ```
 
 ```

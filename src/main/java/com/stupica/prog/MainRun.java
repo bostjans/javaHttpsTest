@@ -5,6 +5,7 @@ import com.stupica.ConstGlobal;
 import com.stupica.GlobalVar;
 
 import com.stupica.core.UtilString;
+import com.stupica.mainRunner.MainRunBase;
 import jargs.gnu.CmdLineParser;
 
 import java.net.HttpURLConnection;
@@ -21,21 +22,21 @@ import java.util.logging.Logger;
 /**
  * Created by bostjans on 07/09/16.
  */
-public class MainRun {
+public class MainRun extends MainRunBase {
     // Variables
     //
-    boolean bIsModeTest = true;
+    //boolean bIsModeTest = true;
 
-    long    iMaxRows = 100;
+    //long    iMaxRows = 100;
 
-    String  sDelimiter = ";";
-    String  sDtFormat = "yyyy-MM-dd HH:mm:ss";
     String  sUrl = "https://www.setcce.com/";
 
     /**
      * Main object instance variable;
      */
     private static MainRun objInstance;
+
+    CmdLineParser.Option obj_op_url;
 
     private static Logger logger = Logger.getLogger(MainRun.class.getName());
 
@@ -44,96 +45,72 @@ public class MainRun {
      * @param a_args    ..
      */
     public static void main(String[] a_args) {
-        // Local variables
-        int             i_result;
-        int             i_return;
-
         // Initialization
-        i_result = ConstGlobal.RETURN_OK;
-        //
-        i_return = ConstGlobal.PROCESS_EXIT_SUCCESS;
         GlobalVar.getInstance().sProgName = "httpsTester";
-        GlobalVar.getInstance().sVersionMax = "0";
-        GlobalVar.getInstance().sVersionMin = "2";
-        GlobalVar.getInstance().sVersionPatch = "0";
-        GlobalVar.getInstance().sVersionBuild = "17";
+        GlobalVar.getInstance().sVersionBuild = "021";
 
         // Generate main program class
         objInstance = new MainRun();
 
-        if (objInstance.bIsModeTest) {
-            if (logger != null) {
-                //logger.setLevel(java.util.logging.Level.ALL);
-                logger.setLevel(Level.FINE);
-
-                ConsoleHandler handler = new ConsoleHandler();
-                // PUBLISH this level
-                handler.setLevel(Level.FINE);
-                logger.addHandler(handler);
-                //
-                logger.setUseParentHandlers(false);
-            }
-        }
-
-        // Program parameters
-        //
-        // Create a CmdLineParser, and add to it the appropriate Options.
-        CmdLineParser obj_parser = new CmdLineParser();
-        CmdLineParser.Option obj_op_help = obj_parser.addBooleanOption('h', "help");
-        CmdLineParser.Option obj_op_quiet = obj_parser.addBooleanOption('q', "quiet");
-        CmdLineParser.Option obj_op_url = obj_parser.addStringOption('u', "url");
-
-        try {
-            obj_parser.parse(a_args);
-        } catch (CmdLineParser.OptionException e) {
-            System.err.println(e.getMessage());
-            print_usage();
-            System.exit(ConstGlobal.PROCESS_EXIT_FAIL_PARAM);
-        }
-
-        if (Boolean.TRUE.equals(obj_parser.getOptionValue(obj_op_help))) {
-            print_usage();
-            System.exit(ConstGlobal.PROCESS_EXIT_SUCCESS);
-        }
-        if (!Boolean.TRUE.equals(obj_parser.getOptionValue(obj_op_quiet)))
-        {
-            // Display program info
-            System.out.println();
-            System.out.println("Program: " + GlobalVar.getInstance().sProgName);
-            System.out.println("Version: " + GlobalVar.getInstance().get_version());
-            System.out.println("Made by: " + GlobalVar.getInstance().sAuthor);
-            System.out.println("===");
-            // Check logger
-            if (logger != null) {
-                logger.info("main(): Program is starting ..");
-            }
-        } else {
-            GlobalVar.bIsModeVerbose = false;
-        }
-
-        objInstance.sUrl = (String)obj_parser.getOptionValue(obj_op_url, "");
-
-        // Check previous step
-        if (i_return == ConstGlobal.PROCESS_EXIT_SUCCESS) {
-            // Run ..
-            i_result = objInstance.run();
-            // Error
-            if (i_result != ConstGlobal.RETURN_OK) {
-                logger.severe("main(): Error at run() operation!");
-                i_return = ConstGlobal.PROCESS_EXIT_FAILURE;
-            }
-        }
+        iReturnCode = objInstance.invokeApp(a_args);
 
         // Return
-        if (i_return != ConstGlobal.PROCESS_EXIT_SUCCESS)
-            System.exit(i_return);
+        if (iReturnCode != ConstGlobal.PROCESS_EXIT_SUCCESS)
+            System.exit(iReturnCode);
     }
 
 
-    private static void print_usage() {
-        System.err.println("Usage: prog [-h,--help]");
-        System.err.println("            [-q,--quiet]");
+    protected void printUsage() {
+        super.printUsage();
         System.err.println("            [-u,--url]URL(https://..)");
+    }
+
+
+    protected void initialize() {
+        super.initialize();
+        bShouldReadConfig = false;
+        //bIsProcessInLoop = false;
+    }
+
+
+    /**
+     * Method: defineArguments
+     *
+     * ..
+     *
+     * @return int iResult	1 = AllOK;
+     */
+    protected int defineArguments() {
+        // Local variables
+        int         iResult;
+
+        // Initialization
+        iResult = super.defineArguments();
+
+        obj_op_url = obj_parser.addStringOption('u', "url");
+        return iResult;
+    }
+
+    /**
+     * Method: readArguments
+     *
+     * ..
+     *
+     * @return int iResult	1 = AllOK;
+     */
+    protected int readArguments() {
+        // Local variables
+        int         iResult;
+
+        // Initialization
+        iResult = super.readArguments();
+
+        // Check previous step
+        if (iResult == ConstGlobal.RETURN_OK) {
+            // Set program parameter
+            objInstance.sUrl = (String)obj_parser.getOptionValue(obj_op_url, "");
+        }
+        return iResult;
     }
 
 
@@ -150,7 +127,7 @@ public class MainRun {
         URL         objUrl = null;
 
         // Initialization
-        iResult = ConstGlobal.RETURN_SUCCESS;
+        iResult = super.run();
 
         if (UtilString.isEmptyTrim(sUrl)) {
             System.out.println("URL not provided!");

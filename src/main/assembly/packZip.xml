@@ -12,7 +12,7 @@
             <useDefaultExcludes>true</useDefaultExcludes>
             <outputDirectory>./</outputDirectory>
             <includes>
-                <include>httpsTest-1.0.0.jar</include>
+                <include>httpsTest-${project.version}.jar</include>
             </includes>
         </fileSet>
         <!--
